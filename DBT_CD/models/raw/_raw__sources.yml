@@ -1,0 +1,23 @@
+version: 2
+
+# Origens externas: somente leitura. O dbt nunca altera estas tabelas.
+sources:
+  - name: totvs_protheus
+    database: TOTVS_PROTHEUS
+    schema: TRUSTED
+    description: Protheus (TOTVS) na camada TRUSTED do lake.
+    tables:
+      - name: sd3010
+        description: Movimentações internas do almoxarifado (requisições e devoluções). Consumo.
+      - name: sd1010
+        description: Itens das notas fiscais de entrada. Ponte para o fornecedor.
+      - name: sa2010
+        description: Cadastro de fornecedores. Chave A2_COD + A2_LOJA.
+      - name: sf4010
+        description: Tipos de entrada e saída (TES).
+      - name: sb1010
+        description: Cadastro de produtos.
+      - name: ctt010
+        description: Cadastro de centros de custo.
+      - name: sys_company
+        description: Cadastro de filiais (CNPJ x código da filial). Usado no rastreio de transferências.

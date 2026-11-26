@@ -1,0 +1,16 @@
+# Sem senha, authenticator ou env_var (padrão do DBT_CUSTOS do Bruno).
+# ATENÇÃO: os campos account e user abaixo são placeholders. Copie o formato
+# exato do profiles.yml do projeto do Bruno, porque o workspace do Snowflake
+# preenche a conexão sozinho e eu não vi esse arquivo.
+DBT_CD:
+  target: dev
+  outputs:
+    dev:
+      type: snowflake
+      account: "not needed"
+      user: "not needed"
+      role: SYSADMIN
+      warehouse: CDS_WH
+      database: DB_CDS
+      schema: STG
+      threads: 4

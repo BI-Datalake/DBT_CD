@@ -1,0 +1,42 @@
+name: 'dbt_cd'
+version: '1.0.0'
+config-version: 2
+
+profile: 'DBT_CD'
+
+model-paths: ["models"]
+macro-paths: ["macros"]
+seed-paths: ["seeds"]
+test-paths: ["tests"]
+
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+# Variáveis do projeto. Nada de data ou lista fixa dentro dos modelos.
+vars:
+  # Corte do consumo (SD3), AAAAMM. Cobre o ano anterior e o acumulado do ano.
+  # Para ampliar em produção, mude só aqui.
+  consumo_inicio: '202501'
+  # Corte das notas de entrada (SD1), AAAAMM. Mais antigo que o consumo de propósito:
+  # a última entrada de um item de giro lento pode ser de meses antes do consumo.
+  entradas_inicio: '202401'
+  # Raiz do CNPJ da AFIP: fornecedor com esta raiz = transferência interna.
+  cnpj_raiz_afip: '47673793'
+
+models:
+  dbt_cd:
+    stg:
+      +schema: STG
+      +materialized: view
+    trusted:
+      +schema: TRUSTED
+      +materialized: table
+    refined:
+      +schema: REFINED
+      +materialized: table
+
+seeds:
+  dbt_cd:
+    +schema: STG
+    +delimiter: ';'

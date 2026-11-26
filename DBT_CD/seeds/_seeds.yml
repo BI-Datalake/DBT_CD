@@ -1,0 +1,44 @@
+version: 2
+
+seeds:
+  - name: dim_cd_centro_custo
+    description: >
+      Lista de centros de custo por CD (Santos, Jundiaí, Cuiabá), enviada pelas áreas.
+      Um CD ou CC novo entra aqui (uma linha por CC). Corporativos de Cuiabá
+      (25100140 Afastados e 25100110 PCD) ficam FORA até a área confirmar.
+      Santos tem 10 CCs, Jundiaí 25 e Cuiabá 18.
+    config:
+      column_types:
+        ccusto: varchar
+    columns:
+      - name: ccusto
+        description: Código do centro de custo (8 dígitos), igual a D3_CC do Protheus.
+        data_tests:
+          - unique
+          - not_null
+      - name: cd_codigo
+        description: SANTOS, JUNDIAI ou CUIABA.
+        data_tests:
+          - not_null
+          - accepted_values:
+              values: ['SANTOS', 'JUNDIAI', 'CUIABA']
+
+  - name: tes_entrada
+    description: >
+      TES de entrada usadas para achar o fornecedor (única fonte da regra).
+      COMPRA = compra externa (CFOP 1556). TRANSFERENCIA = transferência entre filiais (CFOP 1152).
+      Para incluir ou remover uma TES, altere só este arquivo.
+    config:
+      column_types:
+        tes: varchar
+        cfop: varchar
+    columns:
+      - name: tes
+        description: Código da TES, igual a D1_TES.
+        data_tests:
+          - unique
+          - not_null
+      - name: tipo_entrada
+        data_tests:
+          - accepted_values:
+              values: ['COMPRA', 'TRANSFERENCIA']

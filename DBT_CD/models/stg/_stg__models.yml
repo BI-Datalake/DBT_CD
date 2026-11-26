@@ -1,0 +1,68 @@
+version: 2
+
+models:
+  - name: stg_sd3_consumo
+    description: >
+      Consumo dos CDs por dia, filial, CC e produto (requisições - devoluções), desde var consumo_inicio.
+      Fora da conta: TM 999 e CF RE4/DE4 (transferências entre armazéns). Tabela, porque lê a SD3010.
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns: [cd_codigo, dt_emissao, filial, cod_cc, cod_prod, um]
+    columns:
+      - name: cd_codigo
+        data_tests:
+          - not_null
+      - name: cod_cc
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('dim_cd_centro_custo')
+              field: ccusto
+      - name: total_custo
+        description: Valorização em R$ (D3_CUSTO1 com sinal).
+      - name: total_quant
+        description: Volumetria. Não somar itens com UM diferente.
+
+  - name: stg_sd1_entradas
+    description: >
+      Entradas das TES de compra e transferência (seed tes_entrada), desde var entradas_inicio,
+      só de produtos consumidos pelos CDs.
+    columns:
+      - name: recno
+        data_tests:
+          - unique
+          - not_null
+      - name: tipo_entrada
+        data_tests:
+          - accepted_values:
+              values: ['COMPRA', 'TRANSFERENCIA']
+
+  - name: stg_sa2_fornecedor
+    description: Fornecedores. Chave cod_fornecedor + loja. is_afip = transferência interna.
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns: [cod_fornecedor, loja]
+
+  - name: stg_ctt_centro_custo
+    description: Centros de custo e descrição (CTT_DESC01).
+    columns:
+      - name: cod_cc
+        data_tests:
+          - unique
+          - not_null
+
+  - name: stg_sb1_produto
+    description: Produtos e descrição (B1_DESC), que é o nome do insumo no relatório.
+    columns:
+      - name: cod_prod
+        data_tests:
+          - unique
+          - not_null
+
+  - name: stg_sys_company_filiais
+    description: CNPJ x código da filial, para rastrear transferências até a compra externa.
+    columns:
+      - name: cnpj
+        data_tests:
+          - unique
+          - not_null
