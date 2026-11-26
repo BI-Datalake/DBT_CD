@@ -6,5 +6,5 @@ DBT_CD:
       role: SYSADMIN
       warehouse: CDS_WH
       database: DB_CDS
-      schema: APP
+      schema: STG
       threads: 8
