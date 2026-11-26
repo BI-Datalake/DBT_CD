@@ -20,7 +20,7 @@ CREATE RESOURCE MONITOR IF NOT EXISTS CDS_RM
         ON 110 PERCENT DO SUSPEND_IMMEDIATE;
 
 -- ----------------------------------------------
--- 2. Warehouse, database e schemas (SYSADMIN, igual ao projeto do Bruno)
+-- 2. Warehouse, database e schemas
 -- ----------------------------------------------
 USE ROLE SYSADMIN;
 
