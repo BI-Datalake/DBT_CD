@@ -1,0 +1,10 @@
+DBT_CD:
+  target: dev
+  outputs:
+    dev:
+      type: snowflake
+      role: SYSADMIN
+      warehouse: CDS_WH
+      database: DB_CDS
+      schema: APP
+      threads: 8
